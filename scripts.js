@@ -12,13 +12,13 @@ const expensesQuantity = document.querySelector("aside header p span")
 // Capture the input event to format the value.
 amount.oninput = () => {
     // Get the actual value of input and remove the characters non numerics.
-    let value = amount.value.replace(/\D/g, ",")
+    let value = amount.value.replace(",", "")
 
     // Transform the value into cents.
     value = Number(value) / 100
 
     // Update the value of the input
-    amount.value = value
+    amount.value = value.toFixed(2).replace(".", ",")
 }
 
 function formatCurrencyBRL(value) { 
@@ -97,6 +97,9 @@ function expenseAdd(newExpense) {
     // Add the item on the list.
     expenseList.append(expenseItem)
 
+    // Clear the form to add a new item
+    formClear()
+
     // Update the totals.
     updateTotals()
     } catch (error) {
@@ -156,4 +159,29 @@ function updateTotals() {
         console.log(error)
         alert("Não foi possível atualizar os totais.")
     }
+}
+
+// Capture the click event to remove an item of the list.
+expenseList.addEventListener("click", function (event)  {
+    // Verify if the clicked element is a remove-icon.
+    if(event.target.classList.contains("remove-icon")){
+        // Claim the li father of the clicked element.
+        const item = event.target.closest(".expense")
+
+        // Remove the item of the list.
+        item.remove()
+    }
+
+    // Update the totals.
+    updateTotals()
+})
+
+function formClear() {
+    // Clear the inputs.
+    expense.value = ""
+    category.value = ""
+    amount.value = ""
+
+    // Put the focus on the amount input.
+    expense.focus()
 }
